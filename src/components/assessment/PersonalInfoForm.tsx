@@ -47,7 +47,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onNext, defaultValu
     defaultValues: {
       firstName: '',
       lastName: '',
-      age: '',
+      age: '', // Keep this as string since our schema transforms it to number later
       gender: '',
       idNumber: '',
       contactPhone: '',
