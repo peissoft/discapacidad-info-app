@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import jsPDF from 'jspdf';
-import { FileText } from 'lucide-react';
+import * as XLSX from 'xlsx';
+import { FileText, FileSpreadsheet, Download } from 'lucide-react';
 
 interface SummaryFormProps {
   formData: {
@@ -242,6 +243,119 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
     toast.success("PDF generated successfully!");
   };
 
+  const generateExcel = () => {
+    // Crear los datos estructurados para Excel
+    const data = [
+      ['ICF DISABILITY ASSESSMENT REPORT'],
+      ['Generated on:', new Date().toLocaleDateString()],
+      [''],
+      ['PATIENT INFORMATION'],
+      ['Name:', `${personalInfo.firstName} ${personalInfo.lastName}`],
+      ['Age:', personalInfo.age],
+      ['Gender:', personalInfo.gender],
+      ['Contact:', personalInfo.contactPhone || 'Not provided'],
+      ['Medical History:', personalInfo.medicalHistory || 'Not provided'],
+      [''],
+      ['BODY FUNCTIONS'],
+      ['Mental Functions:', mapRatingToText(functionalCapacity.mentalFunctions)],
+      ['Sensory Functions:', mapRatingToText(functionalCapacity.sensoryFunctions)],
+      ['Voice and Speech Functions:', mapRatingToText(functionalCapacity.voiceSpeechFunctions)],
+      ['Cardiovascular Functions:', mapRatingToText(functionalCapacity.cardiovascularFunctions)],
+      ['Digestive Functions:', mapRatingToText(functionalCapacity.digestiveFunctions)],
+      ['Movement Functions:', mapRatingToText(functionalCapacity.movementFunctions)],
+      [''],
+      ['ACTIVITY AND PARTICIPATION'],
+      ['Learning and Applying Knowledge:', mapRatingToText(functionalCapacity.learning)],
+      ['Communication:', mapRatingToText(functionalCapacity.communication)],
+      ['Mobility:', mapRatingToText(functionalCapacity.mobility)],
+      ['Self-Care:', mapRatingToText(functionalCapacity.selfCare)],
+      ['Domestic Life:', mapRatingToText(functionalCapacity.domesticLife)],
+      ['Interpersonal Interactions:', mapRatingToText(functionalCapacity.interpersonalInteractions)],
+      ['Major Life Areas:', mapRatingToText(functionalCapacity.majorLifeAreas)],
+      ['Community and Social Life:', mapRatingToText(functionalCapacity.communityLife)],
+      [''],
+      ['ENVIRONMENTAL FACTORS'],
+      ['Products and Technology:', mapRatingToText(environmentalFactors.productsAndTechnology, true)],
+      ['Natural Environment:', mapRatingToText(environmentalFactors.naturalEnvironment, true)],
+      ['Support and Relationships:', mapRatingToText(environmentalFactors.supportAndRelationships, true)],
+      ['Attitudes:', mapRatingToText(environmentalFactors.attitudes, true)],
+      ['Services and Policies:', mapRatingToText(environmentalFactors.servicesAndPolicies, true)],
+      [''],
+      ['ASSESSMENT RESULTS'],
+      ['Overall Disability Level:', calculateDisabilityScore(functionalCapacity)],
+      ['Environmental Context:', evaluateEnvironmentalFactors(environmentalFactors)]
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'ICF Assessment');
+
+    const fileName = `ICF_Assessment_${personalInfo.firstName}_${personalInfo.lastName}_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+    
+    toast.success("Excel file generated successfully!");
+  };
+
+  const generateCSV = () => {
+    const data = [
+      ['Field', 'Value'],
+      ['Generated on', new Date().toLocaleDateString()],
+      [''],
+      ['PATIENT INFORMATION', ''],
+      ['Name', `${personalInfo.firstName} ${personalInfo.lastName}`],
+      ['Age', personalInfo.age],
+      ['Gender', personalInfo.gender],
+      ['Contact', personalInfo.contactPhone || 'Not provided'],
+      ['Medical History', personalInfo.medicalHistory || 'Not provided'],
+      [''],
+      ['BODY FUNCTIONS', ''],
+      ['Mental Functions', mapRatingToText(functionalCapacity.mentalFunctions)],
+      ['Sensory Functions', mapRatingToText(functionalCapacity.sensoryFunctions)],
+      ['Voice and Speech Functions', mapRatingToText(functionalCapacity.voiceSpeechFunctions)],
+      ['Cardiovascular Functions', mapRatingToText(functionalCapacity.cardiovascularFunctions)],
+      ['Digestive Functions', mapRatingToText(functionalCapacity.digestiveFunctions)],
+      ['Movement Functions', mapRatingToText(functionalCapacity.movementFunctions)],
+      [''],
+      ['ACTIVITY AND PARTICIPATION', ''],
+      ['Learning and Applying Knowledge', mapRatingToText(functionalCapacity.learning)],
+      ['Communication', mapRatingToText(functionalCapacity.communication)],
+      ['Mobility', mapRatingToText(functionalCapacity.mobility)],
+      ['Self-Care', mapRatingToText(functionalCapacity.selfCare)],
+      ['Domestic Life', mapRatingToText(functionalCapacity.domesticLife)],
+      ['Interpersonal Interactions', mapRatingToText(functionalCapacity.interpersonalInteractions)],
+      ['Major Life Areas', mapRatingToText(functionalCapacity.majorLifeAreas)],
+      ['Community and Social Life', mapRatingToText(functionalCapacity.communityLife)],
+      [''],
+      ['ENVIRONMENTAL FACTORS', ''],
+      ['Products and Technology', mapRatingToText(environmentalFactors.productsAndTechnology, true)],
+      ['Natural Environment', mapRatingToText(environmentalFactors.naturalEnvironment, true)],
+      ['Support and Relationships', mapRatingToText(environmentalFactors.supportAndRelationships, true)],
+      ['Attitudes', mapRatingToText(environmentalFactors.attitudes, true)],
+      ['Services and Policies', mapRatingToText(environmentalFactors.servicesAndPolicies, true)],
+      [''],
+      ['ASSESSMENT RESULTS', ''],
+      ['Overall Disability Level', calculateDisabilityScore(functionalCapacity)],
+      ['Environmental Context', evaluateEnvironmentalFactors(environmentalFactors)]
+    ];
+
+    const csvContent = data.map(row => 
+      row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(',')
+    ).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    const fileName = `ICF_Assessment_${personalInfo.firstName}_${personalInfo.lastName}_${new Date().toISOString().split('T')[0]}.csv`;
+    link.setAttribute('download', fileName);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast.success("CSV file generated successfully!");
+  };
+
   const handleComplete = () => {
     toast.success("Assessment completed and saved successfully!");
     onComplete();
@@ -412,18 +526,38 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
       </Card>
 
       <div className="mb-6 p-4 bg-health-50 rounded-lg border border-health-200">
-        <p className="text-health-800 font-medium mb-3">
-          Before completing the assessment, you can generate a PDF report with all the collected data.
+        <p className="text-health-800 font-medium mb-4">
+          Before completing the assessment, you can export the collected data in different formats:
         </p>
-        <Button 
-          type="button" 
-          variant="outline"
-          className="border-health-600 text-health-600 hover:bg-health-50"
-          onClick={generatePDF}
-        >
-          <FileText className="mr-2 h-4 w-4" />
-          Generate PDF Report
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button 
+            type="button" 
+            variant="outline"
+            className="border-health-600 text-health-600 hover:bg-health-50 flex-1"
+            onClick={generatePDF}
+          >
+            <FileText className="mr-2 h-4 w-4" />
+            Export as PDF
+          </Button>
+          <Button 
+            type="button" 
+            variant="outline"
+            className="border-health-600 text-health-600 hover:bg-health-50 flex-1"
+            onClick={generateExcel}
+          >
+            <FileSpreadsheet className="mr-2 h-4 w-4" />
+            Export as Excel
+          </Button>
+          <Button 
+            type="button" 
+            variant="outline"
+            className="border-health-600 text-health-600 hover:bg-health-50 flex-1"
+            onClick={generateCSV}
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Export as CSV
+          </Button>
+        </div>
       </div>
 
       <div className="flex justify-between mt-8">
