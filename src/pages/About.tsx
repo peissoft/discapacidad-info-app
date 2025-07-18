@@ -92,8 +92,15 @@ const About = () => {
           <h2 className="text-xl font-semibold mb-4 text-health-800">Author</h2>
           <div className="mb-4">
             <p className="text-health-700 font-medium">Pedro Luis Sánchez Ortega</p>
-            <p className="text-health-600 mb-2">Universidad de Burgos</p>
-            <a href="https://www.linkedin.com/in/pedro-luis-sanchez-ortega" 
+            <p className="text-health-600 mb-2">
+              <a href="https://investigacion.ubu.es/investigadores/35529/detalle" 
+                 className="text-health-600 hover:underline"
+                 target="_blank"
+                 rel="noopener noreferrer">
+                Universidad de Burgos
+              </a>
+            </p>
+            <a href="https://www.linkedin.com/in/pedrosanchezortega/" 
                className="text-health-600 hover:underline inline-flex items-center gap-1"
                target="_blank"
                rel="noopener noreferrer">
