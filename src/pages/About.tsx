@@ -88,6 +88,20 @@ const About = () => {
           </TabsContent>
         </Tabs>
         
+        <div className="bg-health-50 p-6 rounded-lg mb-6">
+          <h2 className="text-xl font-semibold mb-4 text-health-800">Author</h2>
+          <div className="mb-4">
+            <p className="text-health-700 font-medium">Pedro Luis Sánchez Ortega</p>
+            <p className="text-health-600 mb-2">Universidad de Burgos</p>
+            <a href="https://www.linkedin.com/in/pedro-luis-sanchez-ortega" 
+               className="text-health-600 hover:underline inline-flex items-center gap-1"
+               target="_blank"
+               rel="noopener noreferrer">
+              LinkedIn Profile
+            </a>
+          </div>
+        </div>
+        
         <div className="bg-health-50 p-6 rounded-lg">
           <h2 className="text-xl font-semibold mb-4 text-health-800">References</h2>
           <ul className="space-y-2">
