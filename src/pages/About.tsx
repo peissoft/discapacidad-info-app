@@ -129,7 +129,7 @@ const About = () => {
               </a>
             </li>
             <li>
-              <a href="https://www.who.int/classifications/icf/icfbeginnersguide.pdf" 
+              <a href="https://www.who.int/publications/m/item/icf-beginner-s-guide-towards-a-common-language-for-functioning-disability-and-health" 
                  className="text-health-600 hover:underline"
                  target="_blank"
                  rel="noopener noreferrer">
