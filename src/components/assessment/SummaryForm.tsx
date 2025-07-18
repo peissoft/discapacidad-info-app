@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
+import jsPDF from 'jspdf';
+import { FileText } from 'lucide-react';
 
 interface SummaryFormProps {
   formData: {
@@ -83,6 +85,162 @@ const evaluateEnvironmentalFactors = (environmentalFactors: any) => {
 
 const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onComplete }) => {
   const { personalInfo, functionalCapacity, environmentalFactors } = formData;
+
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.width;
+    const margin = 20;
+    let yPosition = 30;
+
+    // Header
+    doc.setFontSize(20);
+    doc.setFont(undefined, 'bold');
+    doc.text('ICF DISABILITY ASSESSMENT REPORT', pageWidth / 2, yPosition, { align: 'center' });
+    
+    yPosition += 20;
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, pageWidth / 2, yPosition, { align: 'center' });
+    
+    yPosition += 20;
+
+    // Patient Information
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text('PATIENT INFORMATION', margin, yPosition);
+    yPosition += 10;
+    
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text(`Name: ${personalInfo.firstName} ${personalInfo.lastName}`, margin, yPosition);
+    yPosition += 6;
+    doc.text(`Age: ${personalInfo.age}`, margin, yPosition);
+    yPosition += 6;
+    doc.text(`Gender: ${personalInfo.gender}`, margin, yPosition);
+    yPosition += 6;
+    doc.text(`Contact: ${personalInfo.contactPhone || 'Not provided'}`, margin, yPosition);
+    yPosition += 6;
+    
+    if (personalInfo.medicalHistory) {
+      doc.text('Medical History:', margin, yPosition);
+      yPosition += 6;
+      const splitText = doc.splitTextToSize(personalInfo.medicalHistory, pageWidth - 2 * margin);
+      doc.text(splitText, margin + 5, yPosition);
+      yPosition += splitText.length * 4 + 10;
+    } else {
+      yPosition += 10;
+    }
+
+    // Body Functions
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text('BODY FUNCTIONS', margin, yPosition);
+    yPosition += 10;
+    
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    const bodyFunctions = [
+      ['Mental Functions', functionalCapacity.mentalFunctions],
+      ['Sensory Functions', functionalCapacity.sensoryFunctions],
+      ['Voice and Speech Functions', functionalCapacity.voiceSpeechFunctions],
+      ['Cardiovascular Functions', functionalCapacity.cardiovascularFunctions],
+      ['Digestive Functions', functionalCapacity.digestiveFunctions],
+      ['Movement Functions', functionalCapacity.movementFunctions]
+    ];
+    
+    bodyFunctions.forEach(([label, value]) => {
+      doc.text(`${label}: ${mapRatingToText(value)}`, margin, yPosition);
+      yPosition += 6;
+    });
+    
+    yPosition += 10;
+
+    // Activity and Participation
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text('ACTIVITY AND PARTICIPATION', margin, yPosition);
+    yPosition += 10;
+    
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    const activities = [
+      ['Learning and Applying Knowledge', functionalCapacity.learning],
+      ['Communication', functionalCapacity.communication],
+      ['Mobility', functionalCapacity.mobility],
+      ['Self-Care', functionalCapacity.selfCare],
+      ['Domestic Life', functionalCapacity.domesticLife],
+      ['Interpersonal Interactions', functionalCapacity.interpersonalInteractions],
+      ['Major Life Areas', functionalCapacity.majorLifeAreas],
+      ['Community and Social Life', functionalCapacity.communityLife]
+    ];
+    
+    activities.forEach(([label, value]) => {
+      if (yPosition > 270) {
+        doc.addPage();
+        yPosition = 30;
+      }
+      doc.text(`${label}: ${mapRatingToText(value)}`, margin, yPosition);
+      yPosition += 6;
+    });
+    
+    yPosition += 10;
+
+    // Environmental Factors
+    if (yPosition > 240) {
+      doc.addPage();
+      yPosition = 30;
+    }
+    
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text('ENVIRONMENTAL FACTORS', margin, yPosition);
+    yPosition += 10;
+    
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    const envFactors = [
+      ['Products and Technology', environmentalFactors.productsAndTechnology],
+      ['Natural Environment', environmentalFactors.naturalEnvironment],
+      ['Support and Relationships', environmentalFactors.supportAndRelationships],
+      ['Attitudes', environmentalFactors.attitudes],
+      ['Services and Policies', environmentalFactors.servicesAndPolicies]
+    ];
+    
+    envFactors.forEach(([label, value]) => {
+      doc.text(`${label}: ${mapRatingToText(value, true)}`, margin, yPosition);
+      yPosition += 6;
+    });
+    
+    yPosition += 15;
+
+    // Assessment Results
+    if (yPosition > 250) {
+      doc.addPage();
+      yPosition = 30;
+    }
+    
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text('ASSESSMENT RESULTS', margin, yPosition);
+    yPosition += 10;
+    
+    doc.setFontSize(12);
+    doc.setFont(undefined, 'bold');
+    doc.text(`Overall Disability Level: ${calculateDisabilityScore(functionalCapacity)}`, margin, yPosition);
+    yPosition += 8;
+    doc.text(`Environmental Context: ${evaluateEnvironmentalFactors(environmentalFactors)}`, margin, yPosition);
+    
+    // Footer
+    yPosition = doc.internal.pageSize.height - 20;
+    doc.setFontSize(8);
+    doc.setFont(undefined, 'normal');
+    doc.text('ICF Assessment Report - Universidad de Burgos', pageWidth / 2, yPosition, { align: 'center' });
+
+    const fileName = `ICF_Assessment_${personalInfo.firstName}_${personalInfo.lastName}_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(fileName);
+    
+    toast.success("PDF generated successfully!");
+  };
 
   const handleComplete = () => {
     toast.success("Assessment completed and saved successfully!");
@@ -252,6 +410,21 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
           </div>
         </CardContent>
       </Card>
+
+      <div className="mb-6 p-4 bg-health-50 rounded-lg border border-health-200">
+        <p className="text-health-800 font-medium mb-3">
+          Before completing the assessment, you can generate a PDF report with all the collected data.
+        </p>
+        <Button 
+          type="button" 
+          variant="outline"
+          className="border-health-600 text-health-600 hover:bg-health-50"
+          onClick={generatePDF}
+        >
+          <FileText className="mr-2 h-4 w-4" />
+          Generate PDF Report
+        </Button>
+      </div>
 
       <div className="flex justify-between mt-8">
         <Button 
