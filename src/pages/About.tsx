@@ -88,6 +88,29 @@ const About = () => {
           </TabsContent>
         </Tabs>
         
+        <div className="bg-health-50 p-6 rounded-lg mb-8">
+          <h2 className="text-xl font-semibold mb-4 text-health-800">Developer</h2>
+          <p className="mb-2">
+            <strong>Pedro Luis Sánchez Ortega</strong>
+          </p>
+          <p className="mb-4">
+            <a href="https://investigacion.ubu.es/investigadores/35529/detalle" 
+               className="text-health-600 hover:underline"
+               target="_blank"
+               rel="noopener noreferrer">
+              Universidad de Burgos
+            </a>
+          </p>
+          <p>
+            <a href="https://www.linkedin.com/in/pedrosanchezortega/" 
+               className="text-health-600 hover:underline"
+               target="_blank"
+               rel="noopener noreferrer">
+              LinkedIn Profile
+            </a>
+          </p>
+        </div>
+        
         <div className="bg-health-50 p-6 rounded-lg">
           <h2 className="text-xl font-semibold mb-4 text-health-800">References</h2>
           <ul className="space-y-2">
