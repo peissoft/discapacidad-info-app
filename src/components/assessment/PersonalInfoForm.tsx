@@ -47,7 +47,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onNext, defaultValu
     defaultValues: {
       firstName: '',
       lastName: '',
-      age: '',
+      age: 0,
       gender: '',
       idNumber: '',
       contactPhone: '',

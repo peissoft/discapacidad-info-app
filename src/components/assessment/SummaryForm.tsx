@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
+import { FileSpreadsheet, Download } from 'lucide-react';
+import * as XLSX from 'xlsx';
 
 interface SummaryFormProps {
   formData: {
@@ -87,6 +89,76 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
   const handleComplete = () => {
     toast.success("Assessment completed and saved successfully!");
     onComplete();
+  };
+
+  const generateExcelData = () => {
+    return [
+      // Patient Information
+      { Section: 'Patient Information', Field: 'Name', Value: `${personalInfo.firstName} ${personalInfo.lastName}` },
+      { Section: 'Patient Information', Field: 'Age', Value: personalInfo.age },
+      { Section: 'Patient Information', Field: 'Gender', Value: personalInfo.gender },
+      { Section: 'Patient Information', Field: 'Contact', Value: personalInfo.contactPhone || 'Not provided' },
+      { Section: 'Patient Information', Field: 'Medical History', Value: personalInfo.medicalHistory || 'Not provided' },
+      
+      // Body Functions
+      { Section: 'Body Functions', Field: 'Mental Functions', Value: mapRatingToText(functionalCapacity.mentalFunctions) },
+      { Section: 'Body Functions', Field: 'Sensory Functions', Value: mapRatingToText(functionalCapacity.sensoryFunctions) },
+      { Section: 'Body Functions', Field: 'Voice and Speech Functions', Value: mapRatingToText(functionalCapacity.voiceSpeechFunctions) },
+      { Section: 'Body Functions', Field: 'Cardiovascular Functions', Value: mapRatingToText(functionalCapacity.cardiovascularFunctions) },
+      { Section: 'Body Functions', Field: 'Digestive Functions', Value: mapRatingToText(functionalCapacity.digestiveFunctions) },
+      { Section: 'Body Functions', Field: 'Movement Functions', Value: mapRatingToText(functionalCapacity.movementFunctions) },
+      
+      // Activity and Participation
+      { Section: 'Activity and Participation', Field: 'Learning and Applying Knowledge', Value: mapRatingToText(functionalCapacity.learning) },
+      { Section: 'Activity and Participation', Field: 'Communication', Value: mapRatingToText(functionalCapacity.communication) },
+      { Section: 'Activity and Participation', Field: 'Mobility', Value: mapRatingToText(functionalCapacity.mobility) },
+      { Section: 'Activity and Participation', Field: 'Self-Care', Value: mapRatingToText(functionalCapacity.selfCare) },
+      { Section: 'Activity and Participation', Field: 'Domestic Life', Value: mapRatingToText(functionalCapacity.domesticLife) },
+      { Section: 'Activity and Participation', Field: 'Interpersonal Interactions', Value: mapRatingToText(functionalCapacity.interpersonalInteractions) },
+      { Section: 'Activity and Participation', Field: 'Major Life Areas', Value: mapRatingToText(functionalCapacity.majorLifeAreas) },
+      { Section: 'Activity and Participation', Field: 'Community and Social Life', Value: mapRatingToText(functionalCapacity.communityLife) },
+      
+      // Environmental Factors
+      { Section: 'Environmental Factors', Field: 'Products and Technology', Value: mapRatingToText(environmentalFactors.productsAndTechnology, true) },
+      { Section: 'Environmental Factors', Field: 'Natural Environment', Value: mapRatingToText(environmentalFactors.naturalEnvironment, true) },
+      { Section: 'Environmental Factors', Field: 'Support and Relationships', Value: mapRatingToText(environmentalFactors.supportAndRelationships, true) },
+      { Section: 'Environmental Factors', Field: 'Attitudes', Value: mapRatingToText(environmentalFactors.attitudes, true) },
+      { Section: 'Environmental Factors', Field: 'Services and Policies', Value: mapRatingToText(environmentalFactors.servicesAndPolicies, true) },
+      
+      // Assessment Results
+      { Section: 'Assessment Results', Field: 'Overall Disability Level', Value: calculateDisabilityScore(functionalCapacity) },
+      { Section: 'Assessment Results', Field: 'Environmental Context', Value: evaluateEnvironmentalFactors(environmentalFactors) },
+    ];
+  };
+
+  const handleExportExcel = () => {
+    const data = generateExcelData();
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Assessment');
+    
+    const fileName = `Assessment_${personalInfo.firstName}_${personalInfo.lastName}_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
+    
+    toast.success("Assessment exported to Excel successfully!");
+  };
+
+  const handleExportCSV = () => {
+    const data = generateExcelData();
+    const csv = [
+      ['Section', 'Field', 'Value'],
+      ...data.map(row => [row.Section, row.Field, row.Value])
+    ].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+    
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const fileName = `Assessment_${personalInfo.firstName}_${personalInfo.lastName}_${new Date().toISOString().split('T')[0]}.csv`;
+    
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    link.click();
+    
+    toast.success("Assessment exported to CSV successfully!");
   };
 
   return (
@@ -253,7 +325,7 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
         </CardContent>
       </Card>
 
-      <div className="flex justify-between mt-8">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8">
         <Button 
           type="button" 
           variant="outline" 
@@ -261,13 +333,34 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
         >
           Previous
         </Button>
-        <Button 
-          type="button" 
-          className="bg-health-600 hover:bg-health-700"
-          onClick={handleComplete}
-        >
-          Complete Assessment
-        </Button>
+        
+        <div className="flex flex-wrap gap-2">
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={handleExportExcel}
+            className="flex items-center gap-2"
+          >
+            <FileSpreadsheet className="h-4 w-4" />
+            Export Excel
+          </Button>
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={handleExportCSV}
+            className="flex items-center gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Export CSV
+          </Button>
+          <Button 
+            type="button" 
+            className="bg-health-600 hover:bg-health-700"
+            onClick={handleComplete}
+          >
+            Complete Assessment
+          </Button>
+        </div>
       </div>
     </div>
   );
