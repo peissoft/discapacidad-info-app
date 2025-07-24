@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,10 +25,7 @@ import {
 const personalInfoSchema = z.object({
   firstName: z.string().min(2, 'First name is required'),
   lastName: z.string().min(2, 'Last name is required'),
-  age: z.string().transform((val) => val === '' ? '' : Number(val)).refine(
-    (val) => val === '' || (typeof val === 'number' && val >= 0 && val <= 120),
-    'Age must be between 0 and 120'
-  ),
+  age: z.string().transform(Number).refine(val => val >= 0 && val <= 120, 'Age must be between 0 and 120'),
   gender: z.string().min(1, 'Please select a gender'),
   idNumber: z.string().optional(),
   contactPhone: z.string().optional(),
@@ -36,10 +34,10 @@ const personalInfoSchema = z.object({
   medicalHistory: z.string().optional(),
 });
 
-type PersonalInfoFormValues = z.input<typeof personalInfoSchema>;
+type PersonalInfoFormValues = z.infer<typeof personalInfoSchema>;
 
 interface PersonalInfoFormProps {
-  onNext: (data: any) => void;
+  onNext: (data: PersonalInfoFormValues) => void;
   defaultValues?: Partial<PersonalInfoFormValues>;
 }
 
