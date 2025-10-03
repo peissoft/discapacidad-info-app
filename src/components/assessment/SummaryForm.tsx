@@ -6,6 +6,8 @@ import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { FileSpreadsheet, Download, FileText } from 'lucide-react';
 import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface SummaryFormProps {
   formData: {
@@ -162,7 +164,46 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
   };
 
   const handleExportPDF = () => {
-    toast.success("PDF generation would be implemented here!");
+    const doc = new jsPDF();
+    const data = generateExcelData();
+    
+    // Add title
+    doc.setFontSize(18);
+    doc.text('ICF Disability Assessment Report', 14, 20);
+    
+    // Add patient info
+    doc.setFontSize(12);
+    doc.text(`Patient: ${personalInfo.firstName} ${personalInfo.lastName}`, 14, 30);
+    doc.text(`Date: ${new Date().toLocaleDateString()}`, 14, 37);
+    
+    // Add assessment results summary
+    doc.setFontSize(14);
+    doc.text('Assessment Summary', 14, 50);
+    doc.setFontSize(11);
+    doc.text(`Overall Disability Level: ${calculateDisabilityScore(functionalCapacity)}`, 14, 58);
+    doc.text(`Environmental Context: ${evaluateEnvironmentalFactors(environmentalFactors)}`, 14, 65);
+    
+    // Create table with detailed data
+    const tableData = data.map(row => [row.Section, row.Field, row.Value]);
+    
+    autoTable(doc, {
+      startY: 75,
+      head: [['Section', 'Field', 'Value']],
+      body: tableData,
+      styles: { fontSize: 9 },
+      headStyles: { fillColor: [76, 175, 80] },
+      columnStyles: {
+        0: { cellWidth: 50 },
+        1: { cellWidth: 60 },
+        2: { cellWidth: 70 }
+      },
+      margin: { top: 75 }
+    });
+    
+    const fileName = `Assessment_${personalInfo.firstName}_${personalInfo.lastName}_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(fileName);
+    
+    toast.success("Assessment exported to PDF successfully!");
   };
 
   return (
