@@ -211,51 +211,20 @@ const AssessmentCompleted = () => {
           </ul>
         </div>
         
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button 
-              variant="outline" 
-              onClick={handleGeneratePDF}
-              className="flex items-center gap-2"
-            >
-              <FileText size={18} />
-              Generar PDF
+        <div className="flex flex-col md:flex-row justify-center gap-4">
+          <Link to="/">
+            <Button variant="outline" className="flex items-center gap-2">
+              <Home size={18} />
+              Return to Home
             </Button>
-            
-            <Button 
-              variant="outline" 
-              onClick={handleExportCSV}
-              className="flex items-center gap-2"
-            >
-              <Download size={18} />
-              Exportar a CSV
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              onClick={handleExportExcel}
-              className="flex items-center gap-2"
-            >
-              <FileSpreadsheet size={18} />
-              Exportar a Excel
-            </Button>
-          </div>
+          </Link>
           
-          <div className="flex flex-col md:flex-row justify-center gap-4">
-            <Link to="/">
-              <Button variant="outline" className="flex items-center gap-2">
-                <Home size={18} />
-                Return to Home
-              </Button>
-            </Link>
-            
-            <Link to="/assessment">
-              <Button className="bg-health-600 hover:bg-health-700 flex items-center gap-2">
-                <FileText size={18} />
-                Start New Assessment
-              </Button>
-            </Link>
-          </div>
+          <Link to="/assessment">
+            <Button className="bg-health-600 hover:bg-health-700 flex items-center gap-2">
+              <FileText size={18} />
+              Start New Assessment
+            </Button>
+          </Link>
         </div>
       </div>
     </Layout>

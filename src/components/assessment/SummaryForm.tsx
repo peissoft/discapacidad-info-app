@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { FileSpreadsheet, Download } from 'lucide-react';
+import { FileSpreadsheet, Download, FileText } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
 interface SummaryFormProps {
@@ -159,6 +159,10 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
     link.click();
     
     toast.success("Assessment exported to CSV successfully!");
+  };
+
+  const handleExportPDF = () => {
+    toast.success("PDF generation would be implemented here!");
   };
 
   return (
@@ -335,6 +339,15 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
         </Button>
         
         <div className="flex flex-wrap gap-2">
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={handleExportPDF}
+            className="flex items-center gap-2"
+          >
+            <FileText className="h-4 w-4" />
+            Export PDF
+          </Button>
           <Button 
             type="button" 
             variant="outline" 
