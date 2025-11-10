@@ -1,12 +1,23 @@
-# Welcome to your Lovable project
+# Welcome to my first Lovable project
 
-## Project info
+## BASUC Project info
 
 **URL**: https://lovable.dev/projects/d9f0d0e6-1dfd-49da-adfb-7b167b3d89f9
 
-## How can I edit this code?
+# discapacidad-info-app 🚀
 
-There are several ways of editing your application.
+Aplicación web informativa para la inclusión y accesibilidad de personas con discapacidad.  
+Desarrollada y gestionada mediante la plataforma [Lovable](https://lovable.dev/projects/d9f0d0e6-1dfd-49da-adfb-7b167b3d89f9) e integrada con herramientas modernas del ecosistema web.
+
+---
+
+## 👀 Descripción
+
+Esta app tiene como objetivo facilitar el acceso a recursos, servicios y contenidos de interés para el colectivo de personas con discapacidad, sus familias y profesionales del sector.
+
+Incluye navegación sencilla, interfaz adaptada y posibilidades de personalización tanto desde Lovable (mediante prompts IA) como desde entornos de desarrollo tradicionales.
+
+---
 
 **Use Lovable**
 
@@ -50,15 +61,16 @@ npm run dev
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
 
+## 🛠️ Tecnologías principales
 ## What technologies are used for this project?
 
 This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Vite** (entorno de desarrollo ultrarrápido)
+- **React** (componentes reutilizables y UI reactiva)
+- **TypeScript** (seguridad y escalabilidad)
+- **shadcn-ui** (biblioteca de componentes basada en Tailwind)
+- **Tailwind CSS** (diseño limpio, responsive y personalizable)
 
 ## How can I deploy this project?
 
@@ -69,5 +81,62 @@ Simply open [Lovable](https://lovable.dev/projects/d9f0d0e6-1dfd-49da-adfb-7b167
 Yes it is!
 
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
+## 🚦 Instalación y ejecución local
+
+1. Clona este repositorio:
+git clone https://github.com/peissoft/discapacidad-info-app.git
+cd discapacidad-info-app
+
+text
+2. Instala las dependencias:
+npm install
+
+text
+3. Ejecútalo en modo desarrollo:
+npm run dev
+
+text
+
+¿Prefieres trabajar desde la nube?  
+- Abre el proyecto con **GitHub Codespaces** o edítalo directo en la plataforma **[Lovable](https://lovable.dev/projects/d9f0d0e6-1dfd-49da-adfb-7b167b3d89f9)**.
+
+---
+
+## 🌟 Uso básico
+
+- Navega entre las secciones y déjanos tu feedback.
+- La estructura y los componentes pueden ampliarse fácil desde Lovable o tu editor favorito.
+- **Despliegue directo:** Desde Lovable usa Share → Publish o conecta tu propio dominio en Settings → Domains.
+
+---
+
+## 🤝 Colaborar
+
+Las contribuciones están abiertas:
+- Haz un **fork** y propone mejoras via Pull Requestón. Intentaré gestiohnarlas de la mejor manera posible, aunque no te aseguro nada ;-) es una versión en pruebas
+- Sugiere recursos, accesibilidad o nuevas funcionalidades en los Issues.
+- Participa en la mejora continua de la app para el beneficio colectivo.
+
+---
+
+## 📄 Licencia
+
+MIT License
+
+---
+
+## ✨ Créditos y agradecimientos
+
+- Proyecto impulsado por **peissoft**.
+- Con apoyo de la comunidad **Lovable** y herramientas open source.
+
+---
+
+## 🔗 Enlaces útiles
+
+- [Proyecto en Lovable](https://lovable.dev/projects/d9f0d0e6-1dfd-49da-adfb-7b167b3d89f9)
+- [Demo pública][(https://discapacidad-info-app.lovable.app/)]
+- [Universidad de Burgos]([https://www.ubu.es](https://investigacion.ubu.es/investigadores/35529/detalle)) (colaboración académica)
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
