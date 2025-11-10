@@ -1,6 +1,6 @@
 # Welcome to my first Lovable project
 
-## BASUC Project info
+## BASIC Project info
 
 **URL**: https://lovable.dev/projects/d9f0d0e6-1dfd-49da-adfb-7b167b3d89f9
 
