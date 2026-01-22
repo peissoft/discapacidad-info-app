@@ -43,9 +43,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
       
-      <footer className="bg-gray-100 text-gray-600 p-4 mt-auto">
-        <div className="container mx-auto text-center">
+      <footer className="bg-muted text-muted-foreground p-4 mt-auto mb-16 md:mb-0">
+        <div className="container mx-auto text-center space-y-2">
           <p>© {new Date().getFullYear()} ICF Disability Assessment App</p>
+          <Link 
+            to="/privacy" 
+            className="text-sm text-primary hover:text-primary/80 hover:underline inline-flex items-center gap-1"
+          >
+            Política de Privacidad
+          </Link>
         </div>
       </footer>
       
