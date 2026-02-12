@@ -1,6 +1,6 @@
 
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, FileText, Home, FileSpreadsheet, Download } from 'lucide-react';
@@ -8,15 +8,8 @@ import { toast } from 'sonner';
 import * as XLSX from 'xlsx';
 
 const AssessmentCompleted = () => {
-  const [formData, setFormData] = useState<any>(null);
-
-  useEffect(() => {
-    // Recuperar los datos del assessment desde localStorage
-    const savedFormData = localStorage.getItem('assessmentFormData');
-    if (savedFormData) {
-      setFormData(JSON.parse(savedFormData));
-    }
-  }, []);
+  const location = useLocation();
+  const formData = location.state?.formData || null;
 
   // Helper function to map rating values to text descriptions
   const mapRatingToText = (rating: string, isEnvironmental = false) => {
