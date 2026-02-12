@@ -49,7 +49,7 @@ const PrivacyPolicy = () => {
                 <strong>Todos los datos que introduces se procesan exclusivamente en tu navegador.</strong>
               </p>
               <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-                <li>La información de las evaluaciones se almacena únicamente en el almacenamiento local (localStorage) de tu navegador</li>
+                <li>La información de las evaluaciones se mantiene únicamente en la memoria del navegador durante la sesión activa y no se almacena de forma persistente</li>
                 <li>Los documentos PDF y Excel se generan localmente en tu dispositivo</li>
                 <li>No existe ningún servidor que reciba, procese o almacene tus datos</li>
                 <li>Los datos nunca abandonan tu dispositivo</li>
@@ -133,9 +133,8 @@ const PrivacyPolicy = () => {
                 Ten en cuenta las siguientes consideraciones:
               </p>
               <ul className="list-disc list-inside space-y-2">
-                <li>Los datos almacenados localmente persisten hasta que los elimines manualmente o borres los datos de navegación</li>
-                <li>Los datos en localStorage no están cifrados - cualquier persona con acceso a tu dispositivo podría verlos</li>
-                <li>No existe respaldo automático de la información - si borras los datos del navegador, se perderán</li>
+                <li>Los datos de evaluación solo existen en memoria durante la sesión activa — al cerrar la pestaña se eliminan automáticamente</li>
+                <li>No existe respaldo automático de la información — exporta a PDF o Excel antes de cerrar si deseas conservarla</li>
                 <li>Recomendamos exportar las evaluaciones importantes a PDF o Excel para guardarlas de forma segura</li>
               </ul>
             </CardContent>

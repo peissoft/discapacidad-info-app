@@ -50,9 +50,8 @@ const Assessment = () => {
   };
 
   const handleComplete = () => {
-    // In a real application, we would save the assessment data to a database here
-    console.log('Assessment completed with data:', formData);
-    navigate('/assessment/completed');
+    // Pass data via navigation state — no localStorage/sessionStorage needed
+    navigate('/assessment/completed', { state: { formData } });
   };
 
   return (
