@@ -1,7 +1,8 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { FileSpreadsheet, Download, FileText } from 'lucide-react';
@@ -86,8 +87,8 @@ const evaluateEnvironmentalFactors = (environmentalFactors: any) => {
 };
 
 const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onComplete }) => {
+  const [consentGiven, setConsentGiven] = useState(false);
   const { personalInfo, functionalCapacity, environmentalFactors } = formData;
-
   const handleComplete = () => {
     toast.success("Assessment completed and saved successfully!");
     onComplete();
@@ -370,6 +371,26 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
         </CardContent>
       </Card>
 
+      <Card className="mb-6">
+        <CardContent className="pt-6">
+          <div className="flex items-start space-x-3">
+            <Checkbox
+              id="consent"
+              checked={consentGiven}
+              onCheckedChange={(checked) => setConsentGiven(checked === true)}
+            />
+            <label
+              htmlFor="consent"
+              className="text-sm leading-relaxed cursor-pointer"
+            >
+              Declaro que la información proporcionada en esta evaluación es veraz y consiento el procesamiento
+              local de estos datos con el fin de generar el informe de valoración de discapacidad. Entiendo que
+              los datos solo se procesan en mi navegador y no se envían a ningún servidor.
+            </label>
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8">
         <Button 
           type="button" 
@@ -385,6 +406,7 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
             variant="outline" 
             onClick={handleExportPDF}
             className="flex items-center gap-2"
+            disabled={!consentGiven}
           >
             <FileText className="h-4 w-4" />
             Export PDF
@@ -394,6 +416,7 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
             variant="outline" 
             onClick={handleExportExcel}
             className="flex items-center gap-2"
+            disabled={!consentGiven}
           >
             <FileSpreadsheet className="h-4 w-4" />
             Export Excel
@@ -403,6 +426,7 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
             variant="outline" 
             onClick={handleExportCSV}
             className="flex items-center gap-2"
+            disabled={!consentGiven}
           >
             <Download className="h-4 w-4" />
             Export CSV
@@ -411,6 +435,7 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
             type="button" 
             className="bg-health-600 hover:bg-health-700"
             onClick={handleComplete}
+            disabled={!consentGiven}
           >
             Complete Assessment
           </Button>
