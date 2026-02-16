@@ -6,7 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { FileSpreadsheet, Download, FileText } from 'lucide-react';
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -134,14 +134,24 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
     ];
   };
 
-  const handleExportExcel = () => {
+  const handleExportExcel = async () => {
     const data = generateExcelData();
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Assessment');
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Assessment');
+    worksheet.columns = [
+      { header: 'Section', key: 'Section', width: 30 },
+      { header: 'Field', key: 'Field', width: 35 },
+      { header: 'Value', key: 'Value', width: 40 },
+    ];
+    data.forEach(row => worksheet.addRow(row));
     
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const link = document.createElement('a');
     const fileName = `Assessment_${personalInfo.firstName}_${personalInfo.lastName}_${new Date().toISOString().split('T')[0]}.xlsx`;
-    XLSX.writeFile(workbook, fileName);
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    link.click();
     
     toast.success("Assessment exported to Excel successfully!");
   };

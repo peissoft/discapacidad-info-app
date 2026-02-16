@@ -5,7 +5,7 @@ import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, FileText, Home, FileSpreadsheet, Download } from 'lucide-react';
 import { toast } from 'sonner';
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 
 const AssessmentCompleted = () => {
   const location = useLocation();
@@ -129,19 +129,29 @@ const AssessmentCompleted = () => {
     toast.success("PDF generation would be implemented here!");
   };
 
-  const handleExportExcel = () => {
+  const handleExportExcel = async () => {
     if (!formData) {
       toast.error("No assessment data found. Please complete a new assessment.");
       return;
     }
     
     const data = generateExcelData();
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Assessment');
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Assessment');
+    worksheet.columns = [
+      { header: 'Section', key: 'Section', width: 30 },
+      { header: 'Field', key: 'Field', width: 35 },
+      { header: 'Value', key: 'Value', width: 40 },
+    ];
+    data.forEach(row => worksheet.addRow(row));
     
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const link = document.createElement('a');
     const fileName = `Assessment_${formData.personalInfo.firstName}_${formData.personalInfo.lastName}_${new Date().toISOString().split('T')[0]}.xlsx`;
-    XLSX.writeFile(workbook, fileName);
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    link.click();
     
     toast.success("Assessment exported to Excel successfully!");
   };
