@@ -393,9 +393,7 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
               htmlFor="consent"
               className="text-sm leading-relaxed cursor-pointer"
             >
-              Declaro que la información proporcionada en esta evaluación es veraz y consiento el procesamiento
-              local de estos datos con el fin de generar el informe de valoración de discapacidad. Entiendo que
-              los datos solo se procesan en mi navegador y no se envían a ningún servidor.
+              I hereby certify that the information provided in this assessment is accurate and complete. I consent to the local processing of this data for the purpose of generating the disability evaluation report. I acknowledge that all data processing is performed strictly within the local browser environment and no data is transmitted to external servers.
             </label>
           </div>
         </CardContent>
