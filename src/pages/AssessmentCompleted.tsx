@@ -189,7 +189,7 @@ const AssessmentCompleted = () => {
         <h1 className="text-3xl font-bold mb-4">Assessment Completed Successfully</h1>
         
         <p className="text-xl text-gray-600 mb-8">
-          Thank you for completing the ICF disability assessment. The information has been processed and saved.
+          Thank you for completing the ICF disability assessment. The information has been processed locally for report generation. No data has been transmitted to external servers.
         </p>
         
         <div className="p-6 bg-health-50 rounded-lg mb-10">
