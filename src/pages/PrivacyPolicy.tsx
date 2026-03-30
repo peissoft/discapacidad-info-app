@@ -1,8 +1,45 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import Layout from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Shield, Database, Lock, UserCheck, Trash2, AlertCircle } from 'lucide-react';
+import { toast } from 'sonner';
+
+const ClearDataButton = () => {
+  const [confirmed, setConfirmed] = useState(false);
+
+  const handleClear = () => {
+    if (!confirmed) {
+      setConfirmed(true);
+      return;
+    }
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+      toast.success('All locally stored data has been successfully deleted.');
+    } catch {
+      toast.error('An error occurred while clearing data.');
+    }
+    setConfirmed(false);
+  };
+
+  return (
+    <div className="flex items-center gap-3">
+      <Button
+        variant={confirmed ? 'destructive' : 'outline'}
+        onClick={handleClear}
+        className="flex items-center gap-2"
+      >
+        <Trash2 className="h-4 w-4" />
+        {confirmed ? 'Confirm deletion' : 'Delete all local data'}
+      </Button>
+      {confirmed && (
+        <span className="text-sm text-destructive">Click again to confirm</span>
+      )}
+    </div>
+  );
+};
 
 const PrivacyPolicy = () => {
   return (
@@ -111,12 +148,13 @@ const PrivacyPolicy = () => {
               <p>
                 Para eliminar completamente tus datos almacenados localmente:
               </p>
-              <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
+              <ol className="list-decimal list-inside space-y-2 text-muted-foreground mb-4">
                 <li>Abre las herramientas de desarrollador de tu navegador (F12)</li>
                 <li>Ve a la pestaña "Application" o "Almacenamiento"</li>
                 <li>Selecciona "Local Storage" y elimina los datos de este sitio</li>
-                <li>Alternativamente, borra los datos de navegación de tu navegador</li>
+                <li>Alternativamente, usa el botón de abajo o borra los datos de navegación</li>
               </ol>
+              <ClearDataButton />
             </CardContent>
           </Card>
 
