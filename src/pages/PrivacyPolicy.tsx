@@ -113,12 +113,13 @@ const PrivacyPolicy = () => {
               <p>
                 Para eliminar completamente tus datos almacenados localmente:
               </p>
-              <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
+              <ol className="list-decimal list-inside space-y-2 text-muted-foreground mb-4">
                 <li>Abre las herramientas de desarrollador de tu navegador (F12)</li>
                 <li>Ve a la pestaña "Application" o "Almacenamiento"</li>
                 <li>Selecciona "Local Storage" y elimina los datos de este sitio</li>
-                <li>Alternativamente, borra los datos de navegación de tu navegador</li>
+                <li>Alternativamente, usa el botón de abajo o borra los datos de navegación</li>
               </ol>
+              <ClearDataButton />
             </CardContent>
           </Card>
 
