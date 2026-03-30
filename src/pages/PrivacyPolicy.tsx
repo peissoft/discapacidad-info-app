@@ -6,6 +6,41 @@ import { Button } from '@/components/ui/button';
 import { Shield, Database, Lock, UserCheck, Trash2, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
+const ClearDataButton = () => {
+  const [confirmed, setConfirmed] = useState(false);
+
+  const handleClear = () => {
+    if (!confirmed) {
+      setConfirmed(true);
+      return;
+    }
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+      toast.success('All locally stored data has been successfully deleted.');
+    } catch {
+      toast.error('An error occurred while clearing data.');
+    }
+    setConfirmed(false);
+  };
+
+  return (
+    <div className="flex items-center gap-3">
+      <Button
+        variant={confirmed ? 'destructive' : 'outline'}
+        onClick={handleClear}
+        className="flex items-center gap-2"
+      >
+        <Trash2 className="h-4 w-4" />
+        {confirmed ? 'Confirm deletion' : 'Delete all local data'}
+      </Button>
+      {confirmed && (
+        <span className="text-sm text-destructive">Click again to confirm</span>
+      )}
+    </div>
+  );
+};
+
 const PrivacyPolicy = () => {
   return (
     <Layout>

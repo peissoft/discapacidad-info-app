@@ -156,12 +156,17 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ formData, onPrevious, onCompl
     toast.success("Assessment exported to Excel successfully!");
   };
 
+  const sanitizeCsvCell = (value: string): string => {
+    if (/^[=+\-@\t\r]/.test(value)) return `'${value}`;
+    return value;
+  };
+
   const handleExportCSV = () => {
     const data = generateExcelData();
     const csv = [
       ['Section', 'Field', 'Value'],
-      ...data.map(row => [row.Section, row.Field, row.Value])
-    ].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+      ...data.map(row => [sanitizeCsvCell(row.Section), sanitizeCsvCell(row.Field), sanitizeCsvCell(row.Value)])
+    ].map(row => row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(',')).join('\n');
     
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
